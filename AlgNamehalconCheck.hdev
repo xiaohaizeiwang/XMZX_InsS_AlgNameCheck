@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hdevelop file_version="1.2" halcon_version="18.05">
+<procedure name="main">
+<interface/>
+<body>
+<c>**********************************************</c>
+<c>*简化系统，算法新例程</c>
+<l>dev_set_draw ('margin')</l>
+<c></c>
+<c>*参数部分</c>
+<c>***********************************************</c>
+<l>ParamProp:=[]</l>
+<l>ParamName:=[]</l>
+<l>ParamVaule:=[]</l>
+<l>ParamMeaning:=[]</l>
+<l>ParamType:=[]</l>
+<l>ParamMinVaule:=[]</l>
+<l>ParamMaxVaule:=[]</l>
+<c>*原始参数读取</c>
+<l>InnerHalconReadHtParam (ParamProp, ParamName, ParamVaule, ParamMeaning, ParamType, ParamMinVaule, ParamMaxVaule)</l>
+<c></c>
+<c>*建模部分</c>
+<c>***********************************************</c>
+<l>read_image (Image, 'F:/产品线/社会/2017年及之前/当纳利/手机盒胶线/图像/0925-006/Camera0/1.bmp')</l>
+<l>mirror_image (Image, Image, 'row')</l>
+<l>draw_rectangle1 (3600, Row1, Column1, Row2, Column2)</l>
+<l>gen_rectangle1 (CheckReg, Row1, Column1, Row2, Column2)</l>
+<l>reduce_domain (Image, CheckReg, ImageReduced)</l>
+<l>crop_domain (ImageReduced, ModelCheckImg)</l>
+<c></c>
+<c>***************************************</c>
+<c>*由系统传入分辨率</c>
+<l>Resolution:=[0.1,0.1]</l>
+<c>*自动建模函数</c>
+<l>gen_empty_obj (ShowReg)</l>
+<c>*存储模板图像、区域</c>
+<l>gen_empty_obj(ModelImg)</l>
+<l>gen_empty_obj(ModelReg)</l>
+<c></c>
+<l>InnerHalconAutoCreateAlgMode (ModelCheckImg, ShowReg, hModelImg, hModelReg, ParamVaule, Resolution, m_ParamVaule)</l>
+<l>dev_display (ModelCheckImg)</l>
+<l>dev_set_color ('green')</l>
+<l>dev_display (ShowReg)</l>
+<l>stop()</l>
+<c>*检测部分</c>
+<c>******************************************</c>
+<l>list_image_files ('F:/产品线/社会/2017年及之前/当纳利/手机盒胶线/图像/0925-006/Camera0', 'default', [], ImageFiles)</l>
+<l>tuple_length (ImageFiles, Length)</l>
+<c>*******************************</c>
+<c>*有模板图像或区域时，读取模板图像或区域</c>
+<c>*检测参数</c>
+<c></c>
+<l>for Index := 1 to Length by 1 </l>
+<l>    read_image (Image1, ImageFiles[Index-1]) </l>
+<l>    mirror_image (Image1, Image1, 'row')</l>
+<l>    reduce_domain (Image1, CheckReg, ImageReduced1)</l>
+<l>    crop_domain (ImageReduced1, CheckImage)</l>
+<c>*******************************************</c>
+<c>    *内部检测函数</c>
+<l>    gen_empty_obj (ShowReg)</l>
+<l>    gen_empty_obj (ErrorReg)</l>
+<c>    *错误参数输出</c>
+<c>    *ErrorInfor 个数大于0，表示报错，否则正常</c>
+<c>    </c>
+<c>    *htErrorType 错误类型</c>
+<c>    *htErrorGrade 错误级别</c>
+<c>    *htErrorDescrip 错误描述</c>
+<l>    InnerHalconSingleCheck (CheckImage, ShowReg, ErrorReg, m_ParamVaule, Resolution, htErrorType, htErrorGrade, htErrorDescrip)</l>
+<c>     </c>
+<l>   dev_display (CheckImage)  </l>
+<l>   if (htErrorType&gt;0)</l>
+<l>        dev_set_color ('red')</l>
+<l>        dev_display (ErrorReg) </l>
+<c>       *导出c++时，需关闭下面代码</c>
+<c>       * dev_disp_text (htErrorDescrip, 'window', 25, 25, 'black', [], [])</c>
+<l>        disp_message (3600, htErrorDescrip, 'window', 25, 25, 'black', 'true')</l>
+<l>        stop()</l>
+<l>   else</l>
+<l>        dev_set_color ('green')</l>
+<l>        dev_display (ErrorReg) </l>
+<c>        *导出c++时，需关闭下面代码</c>
+<c>        *dev_disp_text (htErrorDescrip, 'window', 25, 25, 'black', [], [])</c>
+<l>        disp_message (3600, htErrorDescrip, 'window', 25, 25, 'black', 'true')</l>
+<l>        stop()</l>
+<l>    endif</l>
+<c>    </c>
+<l>endfor</l>
+<c></c>
+</body>
+<docu id="main">
+<parameters/>
+</docu>
+</procedure>
+<procedure name="InnerHalconAutoCreateAlgMode">
+<interface>
+<io>
+<par name="hCheckImg" base_type="iconic" dimension="0"/>
+</io>
+<oo>
+<par name="hShowReg" base_type="iconic" dimension="0"/>
+<par name="hModelImg" base_type="iconic" dimension="0"/>
+<par name="hModelReg" base_type="iconic" dimension="0"/>
+</oo>
+<ic>
+<par name="htParamVaule" base_type="ctrl" dimension="0"/>
+<par name="htResolution" base_type="ctrl" dimension="0"/>
+</ic>
+<oc>
+<par name="htParamVauleNew" base_type="ctrl" dimension="0"/>
+</oc>
+</interface>
+<body>
+<c>*自动创建模板</c>
+<l>htResolutionX := htResolution[0]</l>
+<l>htbIsBlack := htParamVaule[1]</l>
+<c></c>
+<l>get_image_size (hCheckImg, Width, Height)</l>
+<l>binary_threshold (hCheckImg, Region, 'max_separability', 'light', UsedThreshold)</l>
+<l>threshold (hCheckImg, Region1, UsedThreshold-25, 255)</l>
+<l>connection (Region1, ConnectedRegions)</l>
+<l>select_shape_std (ConnectedRegions, SelectedRegions, 'max_area', 70)</l>
+<c>*黑白盒区分</c>
+<l>if (htbIsBlack==1)</l>
+<l>    erosion_circle (SelectedRegions, RegionErosion, 3.5)</l>
+<l>    else</l>
+<l>    erosion_circle (SelectedRegions, RegionErosion, 83.5)</l>
+<l>endif</l>
+<c></c>
+<l>smallest_rectangle2 (RegionErosion, Row, Column, Phi, Length1, Length2)</l>
+<l>gen_rectangle2 (Rectangle, Row, Column, Phi, Length1, Length2)</l>
+<c></c>
+<l>reduce_domain (hCheckImg, Rectangle, ImageReduced)</l>
+<l>median_rect (ImageReduced, ImageMedian, 35, 35)</l>
+<l>sub_image (ImageReduced, ImageMedian, ImageSub, 1, 128)</l>
+<l>intensity (Rectangle, ImageSub, Mean, Deviation)</l>
+<l>sub_image (ImageSub, ImageSub, ImageSub1, 1, Mean-1.5*Deviation)</l>
+<l>max_image (ImageSub, ImageSub1, ImageMax)</l>
+<c></c>
+<l>median_rect (ImageMax, ImageMedian1, 3, 3)</l>
+<l>median_rect (ImageMedian1, ImageMedian2, 25, 25)</l>
+<l>dyn_threshold (ImageMedian1, ImageMedian2, RegionDynThresh, 6, 'light')</l>
+<l>closing_rectangle1 (RegionDynThresh, RegionClosing, 21, 1)</l>
+<l>connection (RegionClosing, ConnectedRegions1)</l>
+<l>select_shape (ConnectedRegions1, hShowReg, 'width', 'and', Width/3, 99999999)</l>
+<l>smallest_rectangle2 (hShowReg, Row1, Column1, Phi1, Length11, Length21)</l>
+<l>tuple_mean (Length11, Mean1)</l>
+<c></c>
+<l>htParamVauleNew:=htParamVaule</l>
+<l>htParamVauleNew[2]:= Mean1*2*htResolutionX</l>
+<c></c>
+<l>return ()</l>
+</body>
+<docu id="InnerHalconAutoCreateAlgMode">
+<chapters lang="zh_CN">
+<item>自动建模</item>
+</chapters>
+<library lang="zh_CN">北京大恒图像视觉有限公司</library>
+<short lang="zh_CN">自动建模</short>
+<parameters>
+<parameter id="hCheckImg"/>
+<parameter id="hModelImg"/>
+<parameter id="hModelReg"/>
+<parameter id="hShowReg"/>
+<parameter id="htParamVaule"/>
+<parameter id="htParamVauleNew"/>
+<parameter id="htResolution"/>
+</parameters>
+</docu>
+</procedure>
+<procedure name="InnerHalconSingleCheck">
+<interface>
+<io>
+<par name="hCheckImg" base_type="iconic" dimension="0"/>
+</io>
+<oo>
+<par name="hShowReg" base_type="iconic" dimension="0"/>
+<par name="hErrorReg" base_type="iconic" dimension="0"/>
+</oo>
+<ic>
+<par name="htParamVaule" base_type="ctrl" dimension="0"/>
+<par name="htResolution" base_type="ctrl" dimension="0"/>
+</ic>
+<oc>
+<par name="htErrorType" base_type="ctrl" dimension="0"/>
+<par name="htErrorGrade" base_type="ctrl" dimension="0"/>
+<par name="htErrorDescrip" base_type="ctrl" dimension="0"/>
+</oc>
+</interface>
+<body>
+<l>gen_empty_obj (hErrorReg)</l>
+<l>tuple_gen_const (1, 0, htErrorType)</l>
+<l>tuple_gen_const (1, 0, htErrorGrade)</l>
+<l>tuple_gen_const (0, 0, htErrorDescrip)</l>
+<l>htErrorDescrip := '正常'</l>
+<c>*拷贝开始</c>
+<c></c>
+<l>htResolutionX := htResolution[0]</l>
+<l>htbIsBlack := htParamVaule[1]</l>
+<l>htStandrdLength := htParamVaule[2]</l>
+<l>htLengthThr := htParamVaule[3]</l>
+<c>****************************************</c>
+<c>*检测部分</c>
+<l>get_image_size (hCheckImg, Width, Height)</l>
+<l>binary_threshold (hCheckImg, Region, 'max_separability', 'light', UsedThreshold)</l>
+<l>threshold (hCheckImg, Region1, UsedThreshold-25, 255)</l>
+<l>connection (Region1, ConnectedRegions)</l>
+<l>select_shape_std (ConnectedRegions, SelectedRegions, 'max_area', 70)</l>
+<l>if(htbIsBlack==1)</l>
+<l>    erosion_circle (SelectedRegions, RegionErosion, 3.5)</l>
+<l>else</l>
+<l>    erosion_circle (SelectedRegions, RegionErosion, 83.5)</l>
+<l>endif</l>
+<c></c>
+<l>smallest_rectangle2 (RegionErosion, Row, Column, Phi, Length1, Length2)</l>
+<l>gen_rectangle2 (Rectangle, Row, Column, Phi, Length1, Length2)</l>
+<c></c>
+<l>reduce_domain (hCheckImg, Rectangle, ImageReduced)</l>
+<l>median_rect (ImageReduced, ImageMedian, 35, 35)</l>
+<l>sub_image (ImageReduced, ImageMedian, ImageSub, 1, 128)</l>
+<l>intensity (Rectangle, ImageSub, Mean, Deviation)</l>
+<l>sub_image (ImageSub, ImageSub, ImageSub1, 1, Mean-1.5*Deviation)</l>
+<l>max_image (ImageSub, ImageSub1, ImageMax)</l>
+<c></c>
+<l>median_rect (ImageMax, ImageMedian1, 3, 3)</l>
+<l>median_rect (ImageMedian1, ImageMedian2, 25, 25)</l>
+<l>dyn_threshold (ImageMedian1, ImageMedian2, RegionDynThresh, 6, 'light')</l>
+<l>closing_rectangle1 (RegionDynThresh, RegionClosing, 21, 1)</l>
+<l>connection (RegionClosing, ConnectedRegions1)</l>
+<l>select_shape (ConnectedRegions1, hShowReg, 'width', 'and', Width/3, 99999999)</l>
+<l>smallest_rectangle2 (hShowReg, Row1, Column1, Phi1, Length11, Length21)</l>
+<l>tuple_length (Phi1, Length)</l>
+<l>if (Length!=3)</l>
+<l>    hErrorReg:=hShowReg</l>
+<l>    htErrorType:=1</l>
+<l>    htErrorGrade:=255</l>
+<l>    htErrorDescrip:='胶线根数不对'</l>
+<c>   </c>
+<l>else  </l>
+<l>    ErrorMaxLength:=0</l>
+<l>    for Index := 1 to Length by 1       </l>
+<l>        select_obj (hShowReg, ObjectSelected, Index)</l>
+<l>        smallest_rectangle2 (ObjectSelected, Row2, Column2, Phi2, Length12, Length22)</l>
+<l>        ErrorLength:=Length12*2*htResolutionX-htStandrdLength</l>
+<l>        if (abs(ErrorLength)&gt;htLengthThr)           </l>
+<l>            concat_obj (hErrorReg, ObjectSelected, hErrorReg)        </l>
+<l>            if (abs(ErrorLength)&gt;ErrorMaxLength)</l>
+<l>                ErrorMaxLength:=abs(ErrorLength)</l>
+<l>            endif</l>
+<l>        endif</l>
+<l>    endfor   </l>
+<l>    count_obj (hErrorReg, Number)</l>
+<l>    if (Number&gt;0)</l>
+<l>    htErrorType:=2</l>
+<l>    htErrorGrade:=ErrorMaxLength</l>
+<l>    htErrorDescrip:='胶线长短差异'</l>
+<l>    endif</l>
+<l>endif</l>
+<c></c>
+<c>*拷贝结束</c>
+<l>return ()</l>
+</body>
+<docu id="InnerHalconSingleCheck">
+<chapters lang="zh_CN">
+<item>内部检测</item>
+</chapters>
+<library lang="zh_CN">北京大恒图像视觉有限公司</library>
+<short lang="zh_CN">内部检测</short>
+<parameters>
+<parameter id="hCheckImg"/>
+<parameter id="hErrorReg"/>
+<parameter id="hShowReg"/>
+<parameter id="htErrorDescrip"/>
+<parameter id="htErrorGrade"/>
+<parameter id="htErrorType"/>
+<parameter id="htParamVaule"/>
+<parameter id="htResolution"/>
+</parameters>
+</docu>
+</procedure>
+<procedure name="InnerHalconReadHtParam">
+<interface>
+<oc>
+<par name="ParamProp" base_type="ctrl" dimension="0"/>
+<par name="ParamName" base_type="ctrl" dimension="0"/>
+<par name="ParamVaule" base_type="ctrl" dimension="0"/>
+<par name="ParamMeaning" base_type="ctrl" dimension="0"/>
+<par name="ParamType" base_type="ctrl" dimension="0"/>
+<par name="ParamMinVaule" base_type="ctrl" dimension="0"/>
+<par name="ParamMaxVaule" base_type="ctrl" dimension="0"/>
+</oc>
+</interface>
+<body>
+<c>*参数含义</c>
+<c>*[属性] 只读</c>
+<c>*属性含义说明</c>
+<c>*1 - 自动建模所需参数，属性参数</c>
+<c>*0 - 检测所需参数（标准参数、检测参数）</c>
+<l>ParamProp:=[1,1,0,0]</l>
+<c></c>
+<c>*[名称] 只读</c>
+<l>ParamName:=['通道','黑盒','标准长度','长度公差']</l>
+<c></c>
+<c>*[数值] 读写</c>
+<l>ParamVaule:=[0,0,100,1.5]</l>
+<c></c>
+<c>*[含义] 读写</c>
+<l>ParamMeaning:=['0:原始通道；1:R;2:G;3:B','0:白盒;1:黑盒','标准长度（单位：mm）','长度公差（单位：mm）']</l>
+<c></c>
+<c>*[类型]只读 </c>
+<c>*0-BOOL </c>
+<c>*1-整型 </c>
+<c>*2-浮点型</c>
+<l>ParamType:=[1,0,2,2]</l>
+<c></c>
+<c>*[最小值]只读</c>
+<l>ParamMinVaule:=[0,0,0,0]</l>
+<c></c>
+<c>*[最大值]只读</c>
+<l>ParamMaxVaule:=[3,1,100,20]</l>
+<c></c>
+<c>*[步长]只读</c>
+<l>ParamStep:=[1,1,0.1,0.1]</l>
+<l>Param:=[]</l>
+<l>return ()</l>
+</body>
+<docu id="InnerHalconReadHtParam">
+<parameters>
+<parameter id="ParamMaxVaule"/>
+<parameter id="ParamMeaning"/>
+<parameter id="ParamMinVaule"/>
+<parameter id="ParamName"/>
+<parameter id="ParamProp"/>
+<parameter id="ParamType"/>
+<parameter id="ParamVaule"/>
+</parameters>
+</docu>
+</procedure>
+</hdevelop>

@@ -1,0 +1,214 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#ifndef APSTUDIO_INVOKED
+#include "targetver.h"
+#endif
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// 中文(简体，中国) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
+#pragma code_page(936)
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#ifndef APSTUDIO_INVOKED\r\n"
+    "#include ""targetver.h""\r\n"
+    "#endif\r\n"
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)\r\n"
+    "LANGUAGE 9, 1\r\n"
+    "#pragma code_page(936)\r\n"
+    "#include ""res\\AlgStitchCheck.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "#include ""afxres.rc""     // Standard components\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_DIALOG_PROP DIALOGEX 0, 0, 482, 357
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "属性对话框"
+FONT 10, "宋体", 0, 0, 0x0
+BEGIN
+    PUSHBUTTON      "退出",IDCANCEL,432,332,43,18
+    CONTROL         "",IDC_PIC,"Static",SS_BLACKFRAME,7,7,286,215
+    PUSHBUTTON      "检测",IDC_BUTTON_TEST,305,332,43,18
+    PUSHBUTTON      "保存",IDC_BUTTON_SAVE,369,332,43,18
+    LTEXT           "Static",IDC_STATIC_CHECKRESULT,17,272,269,71
+    GROUPBOX        "检测结果",IDC_STATIC,7,259,287,91
+    SCROLLBAR       IDC_SCROLLBAR_HOR,7,223,285,11,NOT WS_VISIBLE
+    SCROLLBAR       IDC_SCROLLBAR_VER,294,7,10,213,SBS_VERT | NOT WS_VISIBLE
+    GROUPBOX        "属性参数",IDC_STATIC,305,7,170,68
+    GROUPBOX        "参数列表",IDC_STATIC,305,82,170,191,NOT WS_VISIBLE
+    LTEXT           "显示方式",IDC_STATIC,7,242,31,8
+    CONTROL         "合适",IDC_RADIO_AUTO,"Button",BS_AUTORADIOBUTTON | WS_GROUP,41,241,31,10
+    CONTROL         "原始",IDC_RADIO_NORM,"Button",BS_AUTORADIOBUTTON,78,241,31,10
+    CONTROL         "缩放模式",IDC_RADIO_SETRATE,"Button",BS_AUTORADIOBUTTON,116,241,43,10
+    EDITTEXT        IDC_EDIT_SHOWRATE_X,194,239,36,14,ES_AUTOHSCROLL | WS_DISABLED
+    EDITTEXT        IDC_EDIT_SHOWRATE_Y,254,239,40,14,ES_AUTOHSCROLL | WS_DISABLED
+    LTEXT           "横向",IDC_STATIC,173,242,16,8
+    LTEXT           "纵向",IDC_STATIC,235,242,16,8
+    PUSHBUTTON      "读默认参数",IDC_BUTTON_READDEFAULT,142,271,50,16,NOT WS_VISIBLE
+    PUSHBUTTON      "写默认参数",IDC_BUTTON_WRITEDEFAULT,213,271,50,16,NOT WS_VISIBLE
+    PUSHBUTTON      "建模",IDC_BUTTON_ATUOCREATMODEL,362,36,50,14
+    CONTROL         "",IDC_LIST_PARAM,"SysListView32",LVS_REPORT | LVS_ALIGNLEFT | NOT WS_VISIBLE | WS_BORDER | WS_TABSTOP,95,25,165,175
+    CONTROL         "",IDC_PARAMLIST,"Static",SS_GRAYRECT,306,92,169,182
+    PUSHBUTTON      "生成检测模板",IDC_GEN_MODEL_MATCH,361,291,50,14
+END
+
+IDD_TESTDLG DIALOG 0, 0, 320, 200
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "对话框"
+FONT 9, "MS Shell Dlg"
+BEGIN
+    DEFPUSHBUTTON   "确定",IDOK,209,179,50,14
+    PUSHBUTTON      "取消",IDCANCEL,263,179,50,14
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_DIALOG_PROP, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 475
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 350
+        HORZGUIDE, 1
+        HORZGUIDE, 343
+        HORZGUIDE, 353
+    END
+
+    IDD_TESTDLG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 313
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 193
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 14,2,0,1
+ PRODUCTVERSION 14,2,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x2L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "080404e4"
+        BEGIN
+            VALUE "Comments", ".1初始版"
+            VALUE "CompanyName", "TODO: <Company name>"
+            VALUE "FileDescription", "TODO: <File description>"
+            VALUE "FileVersion", "14.2.0.1"
+            VALUE "InternalName", "AlgStitchCheck.dll"
+            VALUE "LegalCopyright", "TODO: (c) <Company name>.  All rights reserved."
+            VALUE "OriginalFilename", "AlgStitchCheck.dll"
+            VALUE "ProductName", "TODO: <Product name>"
+            VALUE "ProductVersion", "14.2.0.1"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x804, 1252
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// AFX_DIALOG_LAYOUT
+//
+
+IDD_DIALOG_PROP AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+#endif    // 中文(简体，中国) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+LANGUAGE 9, 1
+#pragma code_page(936)
+#include "res\AlgStitchCheck.rc2"  // non-Microsoft Visual C++ edited resources
+#include "afxres.rc"     // Standard components
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
